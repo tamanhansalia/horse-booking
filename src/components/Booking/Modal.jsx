@@ -1,8 +1,8 @@
 import React from "react";
 import Horses from "./Horses";
 
-const Modal = ({ isOpen, onClose, item }) => {
-  if (!isOpen) return null;
+const Modal = ({ isOpen, onClose, selectedHorse }) => {
+    if (!isOpen) return null;
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -30,7 +30,7 @@ const Modal = ({ isOpen, onClose, item }) => {
           </button>
           <h2 className="text-2xl font-bold mb-4">Booking Confirmation</h2>
           <p className="mb-4">
-            You have successfully booked {item.name}. Thank you!
+            You have successfully booked {} Thank you!
           </p>
           <div className="flex justify-end">
             <button
