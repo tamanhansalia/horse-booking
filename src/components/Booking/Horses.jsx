@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import horseList from "../../data/horseList";
 
 const Horses = ({ selectedHorse, setSelectedHorse }) => {
@@ -23,7 +23,7 @@ const Horses = ({ selectedHorse, setSelectedHorse }) => {
               className={`m-2 p-2 border rounded-md hover:border-[#6A64F1] 
                 text-[#6B7280] outline-none
                 cursor-pointer hover:shadow-md ${
-                  item === selectedHorse ? "border-2 border-[#6A64F1]" : null
+                  item.name === selectedHorse ? "border-2 border-[#6A64F1]" : ""
                 }`}
             >
               <img
@@ -43,15 +43,21 @@ const Horses = ({ selectedHorse, setSelectedHorse }) => {
         {/* {selectedHorse && (
           <div className="mt-5">
             <h2 className="text-lg font-bold">Selected Horse Details:</h2>
-            <p>Name: {selectedHorse.name}</p>
-            <p>Charges: {selectedHorse.charges * 2}₹</p>
-            <img
-              src={selectedHorse.image}
-              alt={selectedHorse.name}
-              width={150}
-              height={180}
-              className="mt-2 rounded-md"
-            />
+            {horseList
+              .filter((horse) => horse.name === selectedHorse)
+              .map((horse) => (
+                <div key={horse.name}>
+                  <p>Name: {horse.name}</p>
+                  <p>Charges: {horse.charges * 2}₹</p>
+                  <img
+                    src={horse.image}
+                    alt={horse.name}
+                    width={150}
+                    height={180}
+                    className="mt-2 rounded-md"
+                  />
+                </div>
+              ))}
           </div>
         )} */}
       </div>

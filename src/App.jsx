@@ -5,6 +5,7 @@ import Bookinggg from "./Pages/Bookinggg";
 import Aboutus from "./Pages/Aboutus";
 import Contact from "./Pages/Contact";
 import Nopage from "./Pages/Nopage";
+import DisplayFormData from "./components/DisplayFormData";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="*" element={<Nopage />} />
         </Routes>
       </BrowserRouter>
+      <DisplayFormData />
     </>
   );
 };

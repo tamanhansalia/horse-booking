@@ -1,45 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Horses from "./Horses"; // Adjust the import path if necessary
-import { userSchema } from "../../validation/userValidation"; // Adjust the import path if necessary
-import Modal from "./Modal"; // Adjust the import path if necessary
+import Horses from "./Horses"; 
+import { userSchema } from "../../validation/userValidation";
+import Modal from "./Modal";
 
 const Booking = () => {
-  const [selectedHorse, setSelectedHorse] = useState(null);
+  const [isSaturday, setIsSaturday] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState(null);
 
   const formik = useFormik({
     initialValues: {
       name: "",
-      phone_number: "",
+      phone: "",
       email: "",
       date: "",
-      time: "00:00",
+      time: "",
+      selectedHorse: "",
     },
     validationSchema: userSchema,
     onSubmit: (values) => {
-      console.log("Form values:", values);
-      console.log("Selected horse:", selectedHorse);
+      setFormData(values);
       setIsModalOpen(true);
+      console.log("Form Submitted", values);
     },
   });
 
-  const handleTimeChange = (e) => {
-    const time = e.target.value;
-    const [hour] = time.split(":");
-    formik.setFieldValue("time", `${hour}:00`);
-  };
+  useEffect(() => {
+    const selectedDate = new Date(formik.values.date);
+    const dayOfWeek = selectedDate.getDay();
+    setIsSaturday(dayOfWeek === 6);
+  }, [formik.values.date]);
 
-  // Function to calculate tomorrow's date
+  // Calculate tomorrow's date
   const getTomorrowDate = () => {
     const today = new Date();
-    today.setDate(today.getDate() + 1); // Move to tomorrow
-    return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
   };
-
-  const tomorrowDate = getTomorrowDate();
-  console.log("Tomorrow's Date: ", tomorrowDate); // Check if the calculation is correct
 
   return (
     <div className="flex items-center justify-center p-12 m-10">
@@ -49,9 +49,12 @@ const Booking = () => {
             <h1 className="text-3xl font-bold text-center">Book a Horse</h1>
           </div>
           <Horses
-            selectedHorse={selectedHorse}
-            setSelectedHorse={setSelectedHorse}
+            selectedHorse={formik.values.selectedHorse}
+            setSelectedHorse={(horse) => formik.setFieldValue("selectedHorse", horse)}
           />
+          {formik.errors.selectedHorse && formik.touched.selectedHorse && (
+            <div className="text-red-500 text-sm">{formik.errors.selectedHorse}</div>
+          )}
           <div className="mb-5">
             <label
               htmlFor="name"
@@ -64,16 +67,13 @@ const Booking = () => {
               name="name"
               id="name"
               placeholder="Full Name"
-              className={`w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md ${
-                formik.touched.name && formik.errors.name ? "border-red-500" : ""
-              }`}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               value={formik.values.name}
+              onChange={formik.handleChange}
             />
-            {formik.touched.name && formik.errors.name ? (
+            {formik.errors.name && formik.touched.name && (
               <div className="text-red-500 text-sm">{formik.errors.name}</div>
-            ) : null}
+            )}
           </div>
           <div className="mb-5">
             <label
@@ -84,23 +84,16 @@ const Booking = () => {
             </label>
             <input
               type="text"
-              name="phone_number"
-              id="phone_number"
+              name="phone"
+              id="phone"
               placeholder="Enter your phone number"
-              className={`w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md ${
-                formik.touched.phone_number && formik.errors.phone_number
-                  ? "border-red-500"
-                  : ""
-              }`}
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+              value={formik.values.phone}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.phone_number}
             />
-            {formik.touched.phone_number && formik.errors.phone_number ? (
-              <div className="text-red-500 text-sm">
-                {formik.errors.phone_number}
-              </div>
-            ) : null}
+            {formik.errors.phone && formik.touched.phone && (
+              <div className="text-red-500 text-sm">{formik.errors.phone}</div>
+            )}
           </div>
           <div className="mb-5">
             <label
@@ -114,18 +107,13 @@ const Booking = () => {
               name="email"
               id="email"
               placeholder="Enter your email"
-              className={`w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md ${
-                formik.touched.email && formik.errors.email
-                  ? "border-red-500"
-                  : ""
-              }`}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
               value={formik.values.email}
+              onChange={formik.handleChange}
             />
-            {formik.touched.email && formik.errors.email ? (
+            {formik.errors.email && formik.touched.email && (
               <div className="text-red-500 text-sm">{formik.errors.email}</div>
-            ) : null}
+            )}
           </div>
           <div className="-mx-3 flex flex-wrap">
             <div className="w-full px-3 sm:w-1/2">
@@ -140,19 +128,14 @@ const Booking = () => {
                   type="date"
                   name="date"
                   id="date"
-                  min={tomorrowDate}
-                  className={`w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md ${
-                    formik.touched.date && formik.errors.date
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
+                  min={getTomorrowDate()} // Set the minimum date to tomorrow
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                   value={formik.values.date}
+                  onChange={formik.handleChange}
                 />
-                {formik.touched.date && formik.errors.date ? (
+                {formik.errors.date && formik.touched.date && (
                   <div className="text-red-500 text-sm">{formik.errors.date}</div>
-                ) : null}
+                )}
               </div>
             </div>
             <div className="w-full px-3 sm:w-1/2">
@@ -164,21 +147,23 @@ const Booking = () => {
                   Time
                 </label>
                 <input
-                  type="time"
+                  type="text"
                   name="time"
                   id="time"
-                  className={`w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md ${
-                    formik.touched.time && formik.errors.time
-                      ? "border-red-500"
-                      : ""
-                  }`}
-                  onChange={handleTimeChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.time}
+                  readOnly // Make the input read-only
+                  value={formik.values.time ? `${formik.values.time.split(':')[0]}:00` : ''} // Set minutes to '00'
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 />
-                {formik.touched.time && formik.errors.time ? (
+                {/* Hidden input to submit actual time value */}
+                <input
+                  type="hidden"
+                  name="time"
+                  value={formik.values.time}
+                  onChange={formik.handleChange}
+                />
+                {formik.errors.time && formik.touched.time && (
                   <div className="text-red-500 text-sm">{formik.errors.time}</div>
-                ) : null}
+                )}
               </div>
             </div>
           </div>
@@ -193,11 +178,7 @@ const Booking = () => {
           </div>
         </form>
       </div>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        selectedHorse={selectedHorse}
-      />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} formData={formData} />
     </div>
   );
 };
