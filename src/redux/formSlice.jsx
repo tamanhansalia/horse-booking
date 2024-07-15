@@ -1,4 +1,3 @@
-// src/redux/formSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const formSlice = createSlice({

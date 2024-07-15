@@ -1,75 +1,114 @@
-import React from "react";
+import React, { useState } from "react";
+import { MoonIcon, SunIcon, Bars3Icon } from "@heroicons/react/24/outline";
+import { motion, AnimatePresence } from "framer-motion";
 
-const navbar = () => {
+const Navbar = () => {
+  const [toggleMenu, setToggleMenu] = useState(false);
+
+  const closeMenu = () => {
+    setToggleMenu(false);
+  };
+
   return (
-    <div>
-      <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            HorseHaven
-          </span>
-          <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <a
-              href="/booking"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Book Now
-            </a>
-            <button
-              data-collapse-toggle="navbar-sticky"
-              type="button"
-              className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="navbar-sticky"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              
-            </button>
-          </div>
-          <div
-            className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-            id="navbar-sticky"
-          >
-            <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              <li>
-                <a
-                  href="/"
-                  className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/aboutus"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  Services
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
+    <div className="app">
+      <nav className="bg-gray-300">
+        <div className="max-w-7xl mx-auto px-8 sm:px-10 lg:px-16">
+          <div className="flex justify-between items-center py-6">
+            <div>
+              <span className="text-gray-700 text-2xl font-bold">
+                HorseHaven
+              </span>
+            </div>
+
+            <div className="hidden lg:flex lg:space-x-8 font-medium">
+              <a href="/" className="text-gray-700 hover:text-[#6A64F1]">
+                Home
+              </a>
+              <a href="/" className="text-gray-700 hover:text-[#6A64F1]">
+                About us
+              </a>
+
+              <a href="/" className="text-gray-700 hover:text-[#6A64F1]">
+                Contact Us
+              </a>
+            </div>
+
+            <div className="hidden lg:flex lg:items-center lg:space-x-6">
+              <a
+                href="/booking"
+                className="rounded-md border font-bold border-gray-900 py-2 px-6 text-gray-700 hover:bg-[#6A64F1] hover:text-gray-100 transition duration-300"
+              >
+                Book Now
+              </a>
+            </div>
+
+            <div className="lg:hidden flex items-center">
+              <button
+                onClick={() => setToggleMenu(!toggleMenu)}
+                className="text-gray-700 focus:outline-none"
+              >
+                <Bars3Icon className="h-6 w-6" />
+              </button>
+            </div>
           </div>
         </div>
+
+        <AnimatePresence>
+          {toggleMenu && (
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: "auto" }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="lg:hidden bg-gray-300 overflow-hidden"
+            >
+              <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4 text-lg px-10">
+                <motion.div
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="flex flex-col gap-4 font-semibold tracking-wide"
+                >
+                  <a
+                    href="/"
+                    onClick={closeMenu}
+                    className="text-gray-700 hover:text-[#6A64F1]"
+                  >
+                    Home
+                  </a>
+                  <a
+                    href="/"
+                    onClick={closeMenu}
+                    className="text-gray-700 hover:text-[#6A64F1]"
+                  >
+                    About us
+                  </a>
+                  <a
+                    href="/"
+                    onClick={closeMenu}
+                    className="text-gray-700 hover:text-[#6A64F1]"
+                  >
+                    Contact us
+                  </a>
+                 
+                </motion.div>
+                <motion.a
+                  href="/booking"
+                  onClick={closeMenu}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="rounded-md border border-gray-900 py-2 px-6 text-gray-700 hover:bg-[#6A64F1] hover:text-gray-100 transition duration-300 mt-4 block w-max"
+                >
+                  Book Now
+                </motion.a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </div>
   );
 };
 
-export default navbar;
+export default Navbar;

@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion"; 
 import horseList from "../../data/horseList";
 
 const Horses = ({ selectedHorse, setSelectedHorse }) => {
@@ -17,7 +18,7 @@ const Horses = ({ selectedHorse, setSelectedHorse }) => {
         </label>
         <div className="grid grid-cols-2">
           {horseList.map((item, index) => (
-            <div
+            <motion.div
               key={index}
               onClick={() => handleHorseClick(item)}
               className={`m-2 p-2 border rounded-md hover:border-[#6A64F1] 
@@ -25,6 +26,11 @@ const Horses = ({ selectedHorse, setSelectedHorse }) => {
                 cursor-pointer hover:shadow-md ${
                   item.name === selectedHorse ? "border-2 border-[#6A64F1]" : ""
                 }`}
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }} 
+              initial={{ opacity: 0, y: -20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.5, delay: index * 0.1 }} 
             >
               <img
                 src={item.image}
@@ -33,33 +39,13 @@ const Horses = ({ selectedHorse, setSelectedHorse }) => {
                 height={90}
                 className="w-full rounded-md"
               />
-              <h2 className="flex flex-col sm:flex-row justify-between items-center pt-1 px-5 text-gray-800 ">
+              <h2 className="flex flex-col sm:flex-row justify-between items-center pt-1 px-5 text-gray-800">
                 {item.name}
                 <span className="">{item.charges * 2}₹</span>
               </h2>
-            </div>
+            </motion.div>
           ))}
         </div>
-        {/* {selectedHorse && (
-          <div className="mt-5">
-            <h2 className="text-lg font-bold">Selected Horse Details:</h2>
-            {horseList
-              .filter((horse) => horse.name === selectedHorse)
-              .map((horse) => (
-                <div key={horse.name}>
-                  <p>Name: {horse.name}</p>
-                  <p>Charges: {horse.charges * 2}₹</p>
-                  <img
-                    src={horse.image}
-                    alt={horse.name}
-                    width={150}
-                    height={180}
-                    className="mt-2 rounded-md"
-                  />
-                </div>
-              ))}
-          </div>
-        )} */}
       </div>
     </div>
   );

@@ -19,7 +19,6 @@ const App = () => {
           <Route path="*" element={<Nopage />} />
         </Routes>
       </BrowserRouter>
-      <DisplayFormData />
     </>
   );
 };
